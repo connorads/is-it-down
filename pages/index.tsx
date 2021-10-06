@@ -11,19 +11,19 @@ interface HomeProps {
   u: string
 }
 
-const defaultUrl = "https://connoradams.co.uk";
+const defaultDomain = "connoradams.co.uk";
 
 const Home: NextPage<HomeProps> = ({ u: url }) => {
   if (url) {
     try {
       url = getDomainUrl(url);
     } catch (error) {
-      url = defaultUrl
+      url = `https://${defaultDomain}`
     }
   }
 
   const router = useRouter()
-  useEffect(() => { if (!url) router.push(`/?u=${defaultUrl}`) })
+  useEffect(() => { if (!url) router.push(`/?u=${defaultDomain}`) })
 
 
   return (
