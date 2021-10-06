@@ -7,7 +7,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<string>
 ) {
-  const atLeast7SecondsSinceInvocation = new Promise(resolve => setTimeout(resolve, 7000));
+  const atLeast4SecondsSinceInvocation = new Promise(resolve => setTimeout(resolve, 4000));
   let browser: playwright.Browser | null = null;
   try {
     browser = await playwright.chromium.launch({
@@ -29,7 +29,7 @@ export default async function handler(
       waitUntil: "domcontentloaded"
     })
     // Dodgy wait to ensure websites get time to load but not so long that we timeout on Vercel
-    await atLeast7SecondsSinceInvocation;
+    await atLeast4SecondsSinceInvocation;
     const data = await page.screenshot({
       type: "png",
     })
