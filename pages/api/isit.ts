@@ -7,6 +7,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<string>
 ) {
+  const atLeast7SecondsSinceInvocation = new Promise(resolve => setTimeout(resolve, 7000));
   let browser: playwright.Browser | null = null;
   try {
     browser = await playwright.chromium.launch({
@@ -24,12 +25,11 @@ export default async function handler(
     const domainUrl = getDomainUrl(urlParam)
     console.log("urls", { urlParam, domainUrl })
     await page.goto(domainUrl, {
-      timeout: 15000
+      timeout: 10000,
+      waitUntil: "domcontentloaded"
     })
-    if (domainUrl == "https://connoradams.co.uk") {
-      // TODO Remove this nonsense that makes screenshot nice 😅
-      await page.waitForLoadState("networkidle")
-    }
+    // Dodgy wait to ensure websites get time to load but not so long that we timeout on Vercel
+    await atLeast7SecondsSinceInvocation;
     const data = await page.screenshot({
       type: "png",
     })
