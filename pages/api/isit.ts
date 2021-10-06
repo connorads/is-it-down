@@ -19,7 +19,8 @@ export default async function handler(
         height: 630
       }
     });
-    const urlParam = req.query["url"] as string;
+    const urlParam = req.query["url"];
+    if (!urlParam || Array.isArray(urlParam)) throw Error("Please pass valid 'url' parameter")
     const domainUrl = getDomainUrl(urlParam)
     console.log("urls", { urlParam, domainUrl })
     await page.goto(domainUrl, {
