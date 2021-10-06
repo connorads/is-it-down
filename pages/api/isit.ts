@@ -12,7 +12,6 @@ export default async function handler(
     browser = await playwright.chromium.launch({
       args: chromium.args,
       executablePath: await chromium.executablePath || undefined,
-      //headless: chromium.headless
     })
     const page = await browser.newPage({
       viewport: {
