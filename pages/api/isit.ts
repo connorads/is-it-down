@@ -3,9 +3,19 @@ import chromium from 'chrome-aws-lambda';
 import playwright from 'playwright-core';
 import getDomainUrl from '../../lib/domainurl';
 
+export interface IsItSuccess {
+  type: "success";
+  imageBase64: string;
+}
+
+export interface IsItError {
+  type: "error";
+  message: string;
+}
+
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<string>
+  res: NextApiResponse<IsItSuccess | IsItError>
 ) {
   const atLeast4SecondsSinceInvocation = new Promise(resolve => setTimeout(resolve, 4000));
   let browser: playwright.Browser | null = null;
@@ -33,14 +43,14 @@ export default async function handler(
     const data = await page.screenshot({
       type: "png",
     })
-    res.status(200).end(data.toString('base64'))
+    res.status(200).json({ type: "success", imageBase64: data.toString('base64') })
   } catch (error) {
     let message = "Unknown error"
     if (error instanceof Error) {
       message = error.message
     }
     console.log("Error in API", message)
-    res.status(500).end(message)
+    res.status(500).json({ type: "error", message })
   } finally {
     if (browser) await browser.close()
   }

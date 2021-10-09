@@ -2,6 +2,7 @@ import useSWR from 'swr'
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import styles from '../styles/Result.module.css'
+import { IsItError, IsItSuccess } from '../pages/api/isit';
 
 
 const fetcher = async (
@@ -9,15 +10,15 @@ const fetcher = async (
     init: RequestInit,
 ) => {
     const res = await fetch(input, init);
-    if (!res.ok) throw new Error((await res.text()).split("===")[0])
+    if (!res.ok) throw new Error(((await res.json()) as IsItError).message.split("===")[0])
 
-    return res.text();
+    return res.json();
 };
 
 const Result = ({ url }: { url: string }) => {
     const params = new URLSearchParams()
     params.set("url", url)
-    const { data, error, isValidating } = useSWR<string, Error>(`/api/isit?${params}`, fetcher)
+    const { data, error, isValidating } = useSWR<IsItSuccess, Error>(`/api/isit?${params}`, fetcher)
 
     const [retryCount, setRetryCount] = useState(0);
 
@@ -26,7 +27,7 @@ const Result = ({ url }: { url: string }) => {
         console.debug("data", data)
     }, [error, data])
 
-    useEffect(()=> {
+    useEffect(() => {
         console.debug("isValidating", isValidating)
         if (isValidating) setRetryCount(r => r + 1);
     }, [isValidating])
@@ -42,7 +43,7 @@ const Result = ({ url }: { url: string }) => {
     </>
     return <>
         <p>It&apos;s up ✅</p>
-        <Image width={400} height={210} alt={`Image preview of ${url}`} src={`data:image/jpeg;base64,${data}`}></Image>
+        <Image width={400} height={210} alt={`Image preview of ${url}`} src={`data:image/png;base64,${data.imageBase64}`}></Image>
     </>
 }
 
