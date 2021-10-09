@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import chromium from 'chrome-aws-lambda';
 import playwright from 'playwright-core';
 import getDomainUrl from '../../lib/domainurl';
+
 export interface IsItSuccess {
   type: "success";
   imageBase64: string;
