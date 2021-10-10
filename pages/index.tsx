@@ -31,10 +31,11 @@ const Home: NextPage<HomeProps> = ({ u: url }) => {
       <Head>
         <title>Is it down?</title>
         <meta name="description" content="Is it down? Or is it just you?" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/icon.png" />
       </Head>
 
       <main className={styles.main}>
+        <Image alt="Is it down logo" src="/icon.png" width={192} height={192}></Image>
         <h1 className={styles.title}>
           So ... <a href="https://isitdown.vercel.app/">Is it down?</a>
         </h1>

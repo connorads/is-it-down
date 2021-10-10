@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/10026538/136706955-1f9443a1-5086-428c-93e0-f8940ecc57a6.png">
+</p>
+
 # Is it down?
 
 > The classic: Is the website down or is it just me site ...
