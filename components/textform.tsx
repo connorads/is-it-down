@@ -15,7 +15,6 @@ interface TextFormProps {
   
     const onSubmit = (event: React.FormEvent) => {
       event.preventDefault();
-      console.log("onSubmit", text)
       if (handleSubmit) handleSubmit(text);
     }
   
