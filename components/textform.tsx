@@ -1,4 +1,5 @@
 import React from "react";
+import styles from '../styles/TextForm.module.css'
 
 interface TextFormProps {
     handleSubmit?: (text: string) => void
@@ -20,8 +21,8 @@ interface TextFormProps {
   
     return (
       <form onSubmit={onSubmit}>
-        <input type="text" value={text} onChange={handleChange} />
-        <input type="submit" value="Go" />
+        <input className={styles.input} type="text" value={text} onChange={handleChange} />
+        <input className={styles.button} type="submit" value="Go" />
       </form>
     );
   }
