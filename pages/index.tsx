@@ -17,7 +17,7 @@ const initialiseUrl = (url: string | undefined) => {
   }
 }
 
-const Home: NextPage<{ u?: string }> = ({ u }) => {
+const Home: NextPage<{ u: string }> = ({ u }) => {
   const router = useRouter()
   const url = initialiseUrl(u);
   useEffect(() => { if (!url) router.push("/?u=connoradams.co.uk") })
@@ -81,7 +81,7 @@ const Home: NextPage<{ u?: string }> = ({ u }) => {
 }
 
 Home.getInitialProps = async ({ query }) => {
-  let u = query.u as string | undefined;
+  let u = String(query.u).trim();
   return { u };
 }
 
