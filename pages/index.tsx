@@ -23,10 +23,8 @@ const Home: NextPage<{ u: string }> = ({ u }) => {
   useEffect(() => { if (!url) router.push("/?u=connoradams.co.uk") })
   if (!url) return null;
 
-  const handleSubmit = (text: string) => {
-    const textTrimmed = text.trim();
-    router.push(`/?u=${textTrimmed}`);
-  }
+  const handleSubmit = (text: string) =>
+    router.push(`/?u=${text.trim()}`);
 
   return (
     <div className={styles.container}>
