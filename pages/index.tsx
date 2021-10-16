@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import Result from '../components/result'
+import TextForm from '../components/textform'
 import getDomainUrl from '../lib/domainurl'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
@@ -13,7 +14,8 @@ interface HomeProps {
 
 const defaultDomain = "connoradams.co.uk";
 
-const Home: NextPage<HomeProps> = ({ u: url }) => {
+const Home: NextPage<HomeProps> = ({ u }) => {
+  let url = u;
   if (url) {
     try {
       url = getDomainUrl(url);
@@ -25,6 +27,9 @@ const Home: NextPage<HomeProps> = ({ u: url }) => {
   const router = useRouter()
   useEffect(() => { if (!url) router.push(`/?u=${defaultDomain}`) })
 
+  const handleSubmit = (text: string) => {
+    router.push(`/?u=${text}`).then(() => router.reload())
+  }
 
   return (
     <div className={styles.container}>
@@ -44,9 +49,7 @@ const Home: NextPage<HomeProps> = ({ u: url }) => {
           Or is it just you?
         </p>
 
-        <code>
-          💡 Edit the bit after ?u= in the URL above to try other websites 👆
-        </code>
+        <TextForm defaultValue={u} handleSubmit={handleSubmit} />
 
         <div className={styles.grid}>
           <a href={url} className={styles.card}>
