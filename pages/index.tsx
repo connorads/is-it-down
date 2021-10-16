@@ -1,4 +1,4 @@
-import type { NextPage } from 'next'
+import type { NextPage, NextPageContext } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
@@ -78,9 +78,11 @@ const Home: NextPage<{ u: string }> = ({ u }) => {
   )
 }
 
-Home.getInitialProps = async ({ query }) => {
-  let u = String(query.u).trim();
-  return { u };
+export async function getServerSideProps({ query }: NextPageContext) {
+  let u = String(query.u || "").trim();
+  return {
+    props: { u },
+  }
 }
 
 export default Home
