@@ -25,12 +25,10 @@ const Home: NextPage<{ u: string }> = ({ u }) => {
 
   const handleSubmit = (text: string) => {
     const textTrimmed = text.trim();
-    const uTrimmed = String(router.query.u).trim();
-    if (uTrimmed === textTrimmed) {
-      router.reload()
-    } else {
-      router.push(`/?u=${text}`)
-    }
+    router.push(`/?u=${textTrimmed}`).then(() => {
+      const uTrimmed = String(router.query.u).trim();
+      if (uTrimmed === textTrimmed) router.reload()
+    })
   }
 
   return (
