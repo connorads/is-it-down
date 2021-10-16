@@ -1,30 +1,30 @@
-import type { NextPage } from 'next'
+import type { NextPage, NextPageContext } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import Result from '../components/result'
+import TextForm from '../components/textform'
 import getDomainUrl from '../lib/domainurl'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
-interface HomeProps {
-  u: string
+const initialiseUrl = (url: string | undefined) => {
+  if (!url) return null;
+  try {
+    return getDomainUrl(url)
+  } catch (error) {
+    return null;
+  }
 }
 
-const defaultDomain = "connoradams.co.uk";
-
-const Home: NextPage<HomeProps> = ({ u: url }) => {
-  if (url) {
-    try {
-      url = getDomainUrl(url);
-    } catch (error) {
-      url = `https://${defaultDomain}`
-    }
-  }
-
+const Home: NextPage<{ u: string }> = ({ u }) => {
   const router = useRouter()
-  useEffect(() => { if (!url) router.push(`/?u=${defaultDomain}`) })
+  const url = initialiseUrl(u);
+  useEffect(() => { if (!url) router.push("/?u=connoradams.co.uk") })
+  if (!url) return null;
 
+  const handleSubmit = (text: string) =>
+    router.push(`/?u=${text.trim()}`);
 
   return (
     <div className={styles.container}>
@@ -44,9 +44,7 @@ const Home: NextPage<HomeProps> = ({ u: url }) => {
           Or is it just you?
         </p>
 
-        <code>
-          💡 Edit the bit after ?u= in the URL above to try other websites 👆
-        </code>
+        <TextForm defaultValue={u} onSubmit={handleSubmit} />
 
         <div className={styles.grid}>
           <a href={url} className={styles.card}>
@@ -54,6 +52,7 @@ const Home: NextPage<HomeProps> = ({ u: url }) => {
             <Result url={url}></Result>
           </a>
         </div>
+
       </main>
 
       <footer className={styles.footer}>
@@ -74,9 +73,11 @@ const Home: NextPage<HomeProps> = ({ u: url }) => {
   )
 }
 
-Home.getInitialProps = async ({ query }) => {
-  let u = query.u as string;
-  return { u };
+export async function getServerSideProps({ query }: NextPageContext) {
+  let u = String(query.u || "").trim();
+  return {
+    props: { u },
+  }
 }
 
 export default Home
