@@ -2,24 +2,24 @@ import React from "react";
 import styles from '../styles/TextForm.module.css'
 
 interface TextFormProps {
-    handleSubmit?: (text: string) => void
+    onSubmit?: (text: string) => void
     defaultValue?: string
   }
   
-  const TextForm = ({ handleSubmit, defaultValue }: TextFormProps) => {
+  const TextForm = ({ onSubmit, defaultValue }: TextFormProps) => {
     const [text, setText] = React.useState(defaultValue ?? "");
   
     const handleChange = (event: React.ChangeEvent<{ value: string }>) => {
       setText(event.target.value);
     }
   
-    const onSubmit = (event: React.FormEvent) => {
+    const handleSubmit = (event: React.FormEvent) => {
       event.preventDefault();
-      if (handleSubmit) handleSubmit(text);
+      if (onSubmit) onSubmit(text);
     }
   
     return (
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit}>
         <input className={styles.input} type="text" value={text} onChange={handleChange} />
         <input className={styles.button} type="submit" value="Go" />
       </form>

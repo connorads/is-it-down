@@ -8,27 +8,27 @@ import getDomainUrl from '../lib/domainurl'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
-interface HomeProps {
-  u: string
+const initialiseUrl = (url: string | undefined) => {
+  if (!url) return null;
+  try {
+    return getDomainUrl(url)
+  } catch (error) {
+    return null;
+  }
 }
 
-const defaultDomain = "connoradams.co.uk";
-
-const Home: NextPage<HomeProps> = ({ u }) => {
-  let url = u;
-  if (url) {
-    try {
-      url = getDomainUrl(url);
-    } catch (error) {
-      url = `https://${defaultDomain}`
-    }
-  }
-
+const Home: NextPage<{ u?: string }> = ({ u }) => {
   const router = useRouter()
-  useEffect(() => { if (!url) router.push(`/?u=${defaultDomain}`) })
+  const url = initialiseUrl(u);
+  useEffect(() => { if (!url) router.push("/?u=connoradams.co.uk") })
+  if (!url) return null;
 
   const handleSubmit = (text: string) => {
-    router.push(`/?u=${text}`).then(() => router.reload())
+    if (router.query.u === text) {
+      router.reload()
+    } else {
+      router.push(`/?u=${text}`)
+    }
   }
 
   return (
@@ -49,7 +49,7 @@ const Home: NextPage<HomeProps> = ({ u }) => {
           Or is it just you?
         </p>
 
-        <TextForm defaultValue={u} handleSubmit={handleSubmit} />
+        <TextForm defaultValue={u} onSubmit={handleSubmit} />
 
         <div className={styles.grid}>
           <a href={url} className={styles.card}>
@@ -57,6 +57,7 @@ const Home: NextPage<HomeProps> = ({ u }) => {
             <Result url={url}></Result>
           </a>
         </div>
+
       </main>
 
       <footer className={styles.footer}>
@@ -78,7 +79,7 @@ const Home: NextPage<HomeProps> = ({ u }) => {
 }
 
 Home.getInitialProps = async ({ query }) => {
-  let u = query.u as string;
+  let u = query.u as string | undefined;
   return { u };
 }
 
